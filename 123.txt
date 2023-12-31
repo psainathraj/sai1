@@ -1,1 +1,39 @@
-im doing git hub work
+pipeline{
+    agent any
+    stages{
+        stage('Checkout'){
+            steps{
+                git 'https://github.com/siba-9439/jenkins-java-project.git'
+            }
+        }
+        stage('Build'){
+            steps{
+                sh 'mvn compile'
+            }
+        }
+        stage('Test'){
+            steps{
+                sh 'mvn test'
+            }
+        }
+        stage('Artifact'){
+            steps{
+                sh 'mvn clean package'
+            }
+        }
+        stage('Nexus'){
+            steps{
+                nexusArtifactUploader artifacts: [[artifactId: '', classifier: '', file: '', type: '']], credentialsId: '', groupId: '', nexusUrl: '', nexusVersion: 'nexus3', protocol: 'http', repository: '', version: ''
+            }
+        }
+        stage('Deployment'){
+            input {
+                message "do you want to continue"
+                ok "yes"
+            }
+            steps {
+                echo "my code is deployed"
+            }
+        }
+    }
+}
